@@ -5,9 +5,78 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>vsc_lab5</title>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.tailwindcss.com">
+</script>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <h1 class="text-2xl font-bold">Dni od urodzin</h1>
+    <form id = "formularz">
+      <label for="du"> Wybierz dzień urodzin:</label>
+      <input type="number" id="du" min="1" max="31"> <br> <br>
+      <label for="mu"> Wybierz miesiąc urodzin:</label>
+      <select id="mu">
+      <option value="1">Styczeń</option>
+      <option value="2">Luty</option>
+      <option value="3">Marzec</option>
+      <option value="4">Kwiecień</option>
+      <option value="5">Maj</option>
+      <option value="6">Czerwiec</option>
+      <option value="7">Lipiec</option>
+      <option value="8">Sierpień</option>
+      <option value="9">Wrzesień</option>
+      <option value="10">Październik</option>
+      <option value="11">Listopad</option>
+      <option value="12">Grudzień</option>
+</select> <br> <br>
+<button class="bg-blue-300 p-4" type="submit" id="oblicz">Oblicz</button>
+    </form>
+    <dialog class="relative p-4 bg-gray-200 text-red-600" id="d">
+      <button class="absolute top-0 right-0" type="button" id="close">×</button>
+      <p id="komunikat"></p>
+    </dialog>
+
   </body>
+  <script>
+    let oblicz = document.getElementById('oblicz');
+    const komunikat = document.getElementById('komunikat')
+    const d = document.getElementById('d')
+    oblicz.addEventListener("click", () => {
+      event.preventDefault();
+      const du = document.getElementById('du').value;
+      const mu = document.getElementById('mu').value;
+      const data = `2026-${mu.padStart(2, '0')}-${du.padStart(2, '0')}`;
+      const urodziny = dayjs(data);
+      if (urodziny){
+        const dziś = dayjs();
+        if (urodziny.isSame(dziś, 'day'))
+      {
+        const różnica = dziś.diff(urodziny, 'days');
+        komunikat.innerText = `Od Twoich urodzin minęło: ${różnica} dni.`;
+        d.showModal();
+        alert('Wszytskiego najlepszego!');
+      }
+        else if (urodziny.isBefore(dayjs(dziś)))
+      {
+        const różnica = dziś.diff(urodziny, 'days');
+        komunikat.innerText = `Od Twoich urodzin minęło: ${różnica} dni.`;
+        d.showModal();
+      }
+        else if (urodziny.isAfter(dayjs(dziś)))
+      {
+       const różnica = 364 + dziś.diff(urodziny, 'days');
+        komunikat.innerText = `Od Twoich urodzin minęło: ${różnica} dni.`;
+        d.showModal();
+      }
+      }
+    }
+  );
+  const close = document.getElementById('close')
+  close.addEventListener('click', () => {
+  d.close();
+  }
+)
+  </script>
 </html>
